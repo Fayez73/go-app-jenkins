@@ -28,12 +28,8 @@ pipeline {
                             sh "docker build -t ${DOCKER_IMAGE_FRONTEND} ."
                         }
                     }
+                }
             }
-            // stage('Docker Build Back end') {
-            //     steps {
-            //         sh 'cd go-app-jenkins/backend && docker build -t backend .'
-            //     }
-            // }
             stage('Push to Docker Hub') {
                 steps {
                     sh 'cd go-app-jenkins/frontend'
