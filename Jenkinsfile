@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+        environment {
+        DOCKER_IMAGE_FRONTEND = "fayez74/react-frontend:latest"
+        DOCKER_IMAGE_BACKEND = "fayez74/go-backend:latest"
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -11,11 +16,23 @@ pipeline {
             }
         }
 
-        stage('Run Command') {
+        stage('Docker Build Front end') {
             steps {
-                // Replace this with whatever command you want to run
-                sh 'echo "Hello from Jenkins! Running commands on pushed code..."'
-                sh 'ls -la'  // lists the repo files
+                sh 'cd go-app-jenkins/frontend && docker build -t ${DOCKER_IMAGE_FRONTEND} .'
+            }
+        }
+        // stage('Docker Build Back end') {
+        //     steps {
+        //         sh 'cd go-app-jenkins/backend && docker build -t backend .'
+        //     }
+        // }
+        stage('Push to Docker Hub') {
+            steps {
+                 sh 'cd go-app-jenkins/frontend'
+                withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                    sh "docker push ${DOCKER_IMAGE_FRONTEND}"
+                }
             }
         }
     }
