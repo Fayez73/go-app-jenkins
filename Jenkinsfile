@@ -23,8 +23,11 @@ pipeline {
         }
         stage('Docker Build Front end') {
             steps {
-                sh 'cd go-app-jenkins/frontend && docker build -t ${DOCKER_IMAGE_FRONTEND} .'
-            }
+                script {
+                    dir("${env.WORKSPACE}/frontend") {
+                        sh "docker build -t ${DOCKER_IMAGE_FRONTEND} ."
+                    }
+                }
         }
         // stage('Docker Build Back end') {
         //     steps {
