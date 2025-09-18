@@ -4,7 +4,7 @@ pipeline {
         environment {
         DOCKER_IMAGE_FRONTEND = "fayez74/react-frontend:latest"
         DOCKER_IMAGE_BACKEND = "fayez74/go-backend:latest"
-        DOCKER = "/opt/homebrew/bin/docker"
+        DOCKER = "docker"
     }
 
     stages {
@@ -20,7 +20,7 @@ pipeline {
                 steps {
                     script {
                         dir("${env.WORKSPACE}/frontend") {
-                            withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                            withCredentials([usernamePassword(credentialsId: 'docker-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                                 sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
                                 sh "${DOCKER} build -t ${DOCKER_IMAGE_FRONTEND} ."
                             }
@@ -31,7 +31,7 @@ pipeline {
             stage('Push to Docker Hub') {
                 steps {
                     sh 'cd go-app-jenkins/frontend'
-                    withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    withCredentials([usernamePassword(credentialsId: 'docker-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
                         sh "docker push ${DOCKER_IMAGE_FRONTEND}"
                     }
