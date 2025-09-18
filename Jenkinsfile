@@ -10,10 +10,9 @@ pipeline {
     stages {
             stage('Checkout') {
                 steps {
-                    // Pull latest code from GitHub
-                    checkout([$class: 'GitSCM', 
-                            branches: [[name: '*/main']], 
-                            userRemoteConfigs: [[url: 'https://github.com/Fayez73/go-app-jenkins', credentialsId: 'github-creds']]])
+                    checkout([$class: 'GitSCM',
+                            branches: [[name: '*/main']],
+                            userRemoteConfigs: [[url: 'https://github.com/Fayez73/go-app-jenkins.git']]])
                 }
             }
             stage('Docker Build Front end') {
