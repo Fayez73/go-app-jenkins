@@ -28,6 +28,7 @@ pipeline {
                     }
                 }
             }
+            
             stage('Push to Docker Hub') {
                 steps {
                     sh 'cd go-app-jenkins/frontend'
