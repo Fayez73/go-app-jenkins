@@ -16,12 +16,6 @@ pipeline {
                             userRemoteConfigs: [[url: 'https://github.com/Fayez73/go-app-jenkins', credentialsId: 'github-creds']]])
                 }
             }
-            stage('Check files') {
-                steps {
-                    sh 'pwd'
-                    sh 'ls -la ~'
-                }
-            }
             stage('Docker Build Front end') {
                 steps {
                     script {
