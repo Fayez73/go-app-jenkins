@@ -4,6 +4,7 @@ pipeline {
         environment {
         DOCKER_IMAGE_FRONTEND = "fayez74/react-frontend:latest"
         DOCKER_IMAGE_BACKEND = "fayez74/go-backend:latest"
+        DOCKER = "/opt/homebrew/bin/docker"
     }
 
     stages {
@@ -25,7 +26,7 @@ pipeline {
                 steps {
                     script {
                         dir("${env.WORKSPACE}/frontend") {
-                            sh "docker build -t ${DOCKER_IMAGE_FRONTEND} ."
+                            sh "${DOCKER} build -t ${DOCKER_IMAGE_FRONTEND} ."
                         }
                     }
                 }
