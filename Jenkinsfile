@@ -18,7 +18,7 @@ pipeline {
         stage('Check files') {
             steps {
                 sh 'pwd'
-                sh 'ls -la'
+                sh 'ls -la ~'
             }
         }
         stage('Docker Build Front end') {
