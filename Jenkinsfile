@@ -33,12 +33,34 @@ pipeline {
                 }
 
             }
+            stage('Docker Build Backend end') {
+                steps {
+                    script {
+                        dir("${env.WORKSPACE}/backend") {
+                            withCredentials([usernamePassword(credentialsId: 'docker-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                                sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                                sh "${DOCKER} build -t ${DOCKER_IMAGE_FRONTEND} ."
+                            }
+                        }
+                    }
+                }
+
+            }
             stage('Push to Docker Hub') {
                 steps {
-                    sh 'cd go-app-jenkins/frontend'
-                    withCredentials([usernamePassword(credentialsId: 'docker-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                        sh "docker push ${DOCKER_IMAGE_FRONTEND}"
+                    script{
+                        dir("${env.WORKSPACE}/frontend") {
+                            withCredentials([usernamePassword(credentialsId: 'docker-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                                sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                                sh "docker push ${DOCKER_IMAGE_FRONTEND}"
+                            }
+                        }
+                        dir("${env.WORKSPACE}/backend") {
+                            withCredentials([usernamePassword(credentialsId: 'docker-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                                sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                                sh "docker push ${DOCKER_IMAGE_FRONTEND}"
+                            }
+                        }
                     }
                 }
             }
