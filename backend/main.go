@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"backend/handlers"
+	"github.com/Fayez73/go-app-jenkins/backend/handlers"
 	"github.com/gorilla/mux"
 )
 
