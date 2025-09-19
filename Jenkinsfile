@@ -17,6 +17,7 @@ pipeline {
             }
             stage('Docker Build Front end') {
                 steps {
+                    
                     script {
                         dir("${env.WORKSPACE}/frontend") {
                             withCredentials([usernamePassword(credentialsId: 'docker-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
