@@ -5,14 +5,15 @@ pipeline {
         DOCKER_IMAGE_FRONTEND = "fayez74/react-frontend:latest"
         DOCKER_IMAGE_BACKEND = "fayez74/go-backend:latest"
         DOCKER = "docker"
+        KUBECONFIG = "/var/jenkins_home/.kube/config"
     }
 
     stages {
-        stage('Cleanup') {
-            steps {
-                cleanWs()
+            stage('Cleanup') {
+                steps {
+                    cleanWs()
+                }
             }
-        }
             stage('Checkout') {
                 steps {
                     checkout([$class: 'GitSCM',
@@ -62,6 +63,33 @@ pipeline {
                             }
                         }
                     }
+                }
+            }
+            stage('Deploy to Minikube') {
+                steps {
+                    sh '''
+                    export KUBECONFIG=$KUBECONFIG
+
+                    # Apply backend and frontend manifests
+                    kubectl apply -f k8s/backend.yaml
+                    kubectl apply -f k8s/frontend.yaml
+                    '''
+                }
+            }
+            stage('Verify Deployment') {
+                steps {
+                    sh 'kubectl --kubeconfig=$KUBECONFIG get pods,svc'
+                }
+            }
+            stage('Test Backend Connectivity') {
+                steps {
+                    sh '''
+                    export KUBECONFIG=$KUBECONFIG
+
+                    # Run a temporary curl pod
+                    kubectl run curl-test --rm -i --tty --image=curlimages/curl --restart=Never -- \
+                    curl -s http://backend-service:4000/api/test
+                    '''
                 }
             }
         }
