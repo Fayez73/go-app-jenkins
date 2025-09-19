@@ -1,20 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
+import { fetchTestData } from "./api";
 
 function App() {
-  const [message, setMessage] = useState('');
+  const [data, setData] = useState(null);
 
   useEffect(() => {
-    // Fetch from Go backend (change URL if using Docker network)
-    fetch('http://backend:4000/api/test')
-      .then(res => res.json())
-      .then(data => setMessage(data.message))
-      .catch(err => setMessage('Could not reach backend'));
+    fetchTestData().then(result => setData(result));
   }, []);
 
   return (
-    <div style={{textAlign: 'center', marginTop: '50px'}}>
+    <div>
       <h1>React Frontend</h1>
-      <p>{message || 'Loading from backend...'}</p>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
   );
 }
