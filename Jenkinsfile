@@ -38,6 +38,16 @@ pipeline {
                     '''
                 }
             }
+            stage('Setup kubectl config') {
+                steps {
+                    sh '''
+                    # Fix paths in kubeconfig
+                    sed -i 's#/Users/fayez/.minikube#${HOME}/.minikube#g' $HOME/.kube/config
+                    export KUBECONFIG=$HOME/.kube/config
+                    kubectl get nodes
+                    '''
+                }
+            }
 
             stage('Checkout') {
                 steps {
