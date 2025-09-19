@@ -73,6 +73,7 @@ pipeline {
                         chmod +x kubectl
                         mv kubectl /usr/local/bin/
                         kubectl version --client
+
                     '''
                 }
             }
