@@ -5,7 +5,8 @@ pipeline {
         DOCKER_IMAGE_FRONTEND = "fayez74/react-frontend:latest"
         DOCKER_IMAGE_BACKEND = "fayez74/go-backend:latest"
         DOCKER = "docker"
-        KUBECONFIG = "/var/jenkins_home/.kube/config"
+        PATH = "${env.HOME}/.local/bin:${env.PATH}"
+        KUBECONFIG = "${env.HOME}/.kube/config"
     }
 
     stages {
