@@ -17,16 +17,27 @@ pipeline {
             stage('Install kubectl') {
                 steps {
                     sh '''
+                    # Make a local bin directory in Jenkins home
+                    mkdir -p $HOME/.local/bin
+
                     # Download kubectl (fixed version)
                     curl -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+
+                    # Make it executable
                     chmod +x kubectl
-                    mv kubectl /usr/local/bin/
+
+                    # Move to local bin
+                    mv kubectl $HOME/.local/bin/
+
+                    # Add local bin to PATH for this shell
+                    export PATH=$HOME/.local/bin:$PATH
 
                     # Verify installation
                     kubectl version --client
                     '''
                 }
-        }
+            }
+
             stage('Checkout') {
                 steps {
                     checkout([$class: 'GitSCM',
