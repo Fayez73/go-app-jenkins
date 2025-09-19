@@ -1,4 +1,4 @@
-module github.com/Fayez73/go-app-jenkins/tree/main/backend
+module github.com/Fayez73/go-app-jenkins/backend
 
 go 1.21
 
