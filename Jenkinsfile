@@ -41,10 +41,6 @@ pipeline {
             stage('Fix Minikube kubeconfig paths') {
                 steps {
                     sh '''
-                    # Replace host paths with container paths
-                    sed -i "s#/Users/fayez/.minikube#$HOME/.minikube#g" $HOME/.kube/config
-
-                    # Verify connectivity
                     kubectl get nodes
                     '''
                 }
