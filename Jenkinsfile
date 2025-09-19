@@ -17,6 +17,7 @@ pipeline {
             }
             stage('Docker Build Front end') {
                 steps {
+
                     
                     script {
                         dir("${env.WORKSPACE}/frontend") {
