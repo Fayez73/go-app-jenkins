@@ -14,6 +14,19 @@ pipeline {
                     cleanWs()
                 }
             }
+            stage('Install kubectl') {
+                steps {
+                    sh '''
+                    # Download kubectl (fixed version)
+                    curl -LO "https://dl.k8s.io/release/v1.27.6/bin/linux/amd64/kubectl"
+                    chmod +x kubectl
+                    mv kubectl /usr/local/bin/
+
+                    # Verify installation
+                    kubectl version --client
+                    '''
+                }
+        }
             stage('Checkout') {
                 steps {
                     checkout([$class: 'GitSCM',
@@ -63,18 +76,6 @@ pipeline {
                             }
                         }
                     }
-                }
-            }
-            stage('Install kubectl') {
-                steps {
-                    sh '''
-                        KUBECTL_VERSION=$(curl -s https://dl.k8s.io/release/stable.txt)
-                        curl -LO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
-                        chmod +x kubectl
-                        mv kubectl /usr/local/bin/
-                        kubectl version --client
-
-                    '''
                 }
             }
             stage('Deploy to Minikube') {
